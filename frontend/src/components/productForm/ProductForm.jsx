@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Form, InputContainer, Input } from "./productForm.styles";
 
@@ -7,15 +7,23 @@ const initialState = { name: "", description: "", price: 0 };
 const ProductForm = ({ onSubmit, editProduct }) => {
   const [formData, setFormData] = useState(initialState);
 
+  //handle change each input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  //set the data of the product to edit if there is one.
+  useEffect(() => {
+    if (editProduct) {
+      setFormData(editProduct);
+    }
+  }, [editProduct]);
+
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData)
-    setFormData(initialState)
+    onSubmit(formData);
+    setFormData(initialState);
   };
 
   return (
@@ -51,7 +59,7 @@ const ProductForm = ({ onSubmit, editProduct }) => {
         />
       </InputContainer>
 
-      <button type="submit"> create product</button>
+      <button type="submit">{editProduct ? "Update" : "Create"} product</button>
     </Form>
   );
 };

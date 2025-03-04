@@ -53,23 +53,62 @@ const Home = () => {
     }
   };
 
-  //Send POST request to DB to create a product
+  const onCreateProduct = async (product) => {
+    const response = await fetch(`${SERVER_URI}/api/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(product),
+    });
+    if (!response.ok) {
+      window.alert("Error creating the product");
+      throw new Error("Error creating product");
+    }
+    const productCreated = await response.json();
+    window.alert("Product created successfully");
+    setProducts((prevProducts) => [...prevProducts, productCreated]);
+  };
+
+  const onUpdateProduct = async (product) => {
+    const response = await fetch(`${SERVER_URI}/api/products/${product._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+      }),
+    });
+    if (!response.ok) {
+      window.alert("Error updating the product");
+      throw new Error("Error updating product");
+    }
+    const data = await response.json();
+    console.log("DATA", data);
+    const productUpdated = data.updatedProduct;
+    //updates product list replacing the old product for the new update
+    const newProductsList = products.map((product) => {
+      if (product._id === productUpdated._id) {
+        return productUpdated;
+      } else {
+        return product;
+      }
+    });
+    setProducts(newProductsList);
+    window.alert("Product updated successfully");
+  };
+
+  //Send POST or PUT request to DB to create or update a product
   const onSubmit = async (formData) => {
     try {
-      const response = await fetch(`${SERVER_URI}/api/products`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) {
-        window.alert("Error creating the product");
-        throw new Error("Error creating product");
+      if (editProduct) {
+        await onUpdateProduct(formData);
+      } else {
+        await onCreateProduct(formData);
       }
-      const productCreated = await response.json();
-      window.alert("Product created successfully");
-      setProducts((prevProducts) => [...prevProducts, productCreated]);
     } catch (error) {
       window.alert("Error creating the product");
       console.error("Error submitting form");
