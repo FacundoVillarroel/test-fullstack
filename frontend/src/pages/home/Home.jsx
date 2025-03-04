@@ -5,6 +5,7 @@ import { Title } from "./home.styles";
 const serverURI = "http://localhost:8080";
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [editProduct, setEditProduct] = useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -23,10 +24,20 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+  const onDelete = (id) => {
+    console.log("Delete Product", id);
+  };
+
+  console.log("Edit Product", editProduct);
+
   return (
     <div>
       <Title>Products</Title>
-      <ProductList products={products} />
+      <ProductList
+        products={products}
+        setEditProduct={setEditProduct}
+        onDelete={onDelete}
+      />
     </div>
   );
 };

@@ -1,15 +1,16 @@
 import React from "react";
+import ListItem from "../listItem/ListItem";
 
-const ProductList = ({ products }) => {
+const ProductList = ({ products, setEditProduct, onDelete }) => {
   return (
     <ul>
       {products.map((product) => (
-        <li key={product._id}>
-          <h3>{product.name}</h3>
-          <p>{product.description}</p>
-          <p>${product.price}</p>
-          <hr></hr>
-        </li>
+        <ListItem
+          product={product}
+          key={product._id}
+          setEditProduct={setEditProduct}
+          onDelete={onDelete}
+        />
       ))}
     </ul>
   );
