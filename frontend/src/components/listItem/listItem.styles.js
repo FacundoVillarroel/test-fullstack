@@ -5,4 +5,5 @@ export const Button = styled.button`
   border: 1px black solid;
   background-color: green;
   margin-left: 10px;
+  cursor: pointer;
 `;

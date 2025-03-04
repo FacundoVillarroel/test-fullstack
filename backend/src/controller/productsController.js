@@ -11,6 +11,22 @@ const getAllProducts = async (req, res, next) => {
   }
 };
 
+//get product by id
+const getProductById = async (req,res,next) => {
+try {
+  const {id} = req.params;
+  const productFound = await Product.findById(id)
+  if(!productFound){
+    res.status(404).send({message:"product not found"})
+    return
+  }
+  res.send(productFound)
+} catch (error) {
+    console.error("Error getting product", error);
+    res.status(500).send("Error getting product");
+}
+}
+
 //create products
 const createProduct = async (req, res, next) => {
   try {
@@ -66,4 +82,4 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllProducts, createProduct,updateProduct, deleteProduct };
+module.exports = { getAllProducts,getProductById, createProduct,updateProduct, deleteProduct };
