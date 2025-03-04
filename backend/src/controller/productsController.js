@@ -19,6 +19,7 @@ const createProduct = async (req, res, next) => {
     const productCreated = await new Product(product).save();
     if (!productCreated) {
       res.status(500).send("Error creating product");
+      return;
     }
     res.status(201).send(productCreated);
   } catch (error) {
@@ -27,4 +28,20 @@ const createProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllProducts, createProduct };
+//delete product
+const deleteProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const productDeleted = await Product.findByIdAndDelete(id);
+    if (!productDeleted) {
+      res.status(404).send("Product not found");
+      return;
+    }
+    res.send({ deleted: true, productDeleted });
+  } catch (error) {
+    console.error("Error deleting product", error);
+    res.status(500).send("Error deleting product");
+  }
+};
+
+module.exports = { getAllProducts, createProduct, deleteProduct };
