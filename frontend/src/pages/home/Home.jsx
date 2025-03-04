@@ -2,16 +2,19 @@ import React, { useState, useEffect } from "react";
 import ProductForm from "../../components/productForm/ProductForm";
 import ProductList from "../../components/productList/ProductList";
 import { Title } from "./home.styles";
+import Loading from "../../components/loading/Loading";
 
 const SERVER_URI = "http://localhost:8080";
 
 const Home = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const [products, setProducts] = useState([]);
   const [editProduct, setEditProduct] = useState(null);
 
   //function to Fetch product from DB
   const fetchProducts = async () => {
     try {
+      setIsLoading(true)
       const response = await fetch(`${SERVER_URI}/api/products`);
       if (!response.ok) {
         window.alert("Error fetching products");
@@ -19,7 +22,9 @@ const Home = () => {
       }
       const productsList = await response.json();
       setProducts(productsList);
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       window.alert("Error fetching the product");
       console.error("Error fetching products");
     }
@@ -33,6 +38,7 @@ const Home = () => {
   //function to delete product on DB by its ID
   const onDelete = async (id) => {
     try {
+      setIsLoading(true)
       const response = await fetch(`${SERVER_URI}/api/products/${id}`, {
         method: "DELETE",
       });
@@ -47,7 +53,9 @@ const Home = () => {
       );
       window.alert("Product deleted successfully!");
       setProducts(newProductsList);
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       window.alert("Error deleting the product");
       console.error("Error deleting product");
     }
@@ -87,7 +95,6 @@ const Home = () => {
       throw new Error("Error updating product");
     }
     const data = await response.json();
-    console.log("DATA", data);
     const productUpdated = data.updatedProduct;
     //updates product list replacing the old product for the new update
     const newProductsList = products.map((product) => {
@@ -104,28 +111,38 @@ const Home = () => {
   //Send POST or PUT request to DB to create or update a product
   const onSubmit = async (formData) => {
     try {
+      setIsLoading(true)
       if (editProduct) {
         await onUpdateProduct(formData);
       } else {
         await onCreateProduct(formData);
       }
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       window.alert("Error creating the product");
       console.error("Error submitting form");
     }
   };
 
   return (
-    <div>
-      <Title>Products</Title>
-      <h2>Product Form:</h2>
-      <ProductForm onSubmit={onSubmit} editProduct={editProduct} />
-      <ProductList
-        products={products}
-        setEditProduct={setEditProduct}
-        onDelete={onDelete}
-      />
-    </div>
+    <>
+      {isLoading 
+        ?
+          <Loading/>
+        : 
+      <div>
+        <Title>Products</Title>
+        <h2>Product Form:</h2>
+        <ProductForm onSubmit={onSubmit} editProduct={editProduct} />
+        <ProductList
+          products={products}
+          setEditProduct={setEditProduct}
+          onDelete={onDelete}
+        />
+      </div>
+      }
+    </>
   );
 };
 
