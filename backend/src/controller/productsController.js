@@ -28,6 +28,24 @@ const createProduct = async (req, res, next) => {
   }
 };
 
+//update product
+const updateProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, description, price } = req.body;
+    const product = { name, description, price };
+    const updatedProduct = await Product.findOneAndUpdate({_id:id}, product, {returnNewDocument:true})
+    if(!updatedProduct){
+      res.status(404).send({message:"Product not found", updated:false})
+      return
+    }
+    res.send({updated:true, updatedProduct})
+  } catch (error) {
+    console.error("Error updating product", error);
+    res.status(500).send({message:"Error updating product", updated:false});
+  }
+}
+
 //delete product
 const deleteProduct = async (req, res, next) => {
   try {
@@ -44,4 +62,4 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllProducts, createProduct, deleteProduct };
+module.exports = { getAllProducts, createProduct,updateProduct, deleteProduct };
