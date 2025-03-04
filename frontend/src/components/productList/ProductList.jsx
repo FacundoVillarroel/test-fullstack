@@ -2,6 +2,7 @@ import React from "react";
 import ListItem from "../listItem/ListItem";
 
 const ProductList = ({ products, setEditProduct, onDelete }) => {
+
   return (
     <ul>
       {products.map((product) => (

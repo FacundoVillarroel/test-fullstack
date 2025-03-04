@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ProductForm from "../../components/productForm/ProductForm";
 import ProductList from "../../components/productList/ProductList";
 import { Title } from "./home.styles";
 
@@ -28,11 +29,11 @@ const Home = () => {
     console.log("Delete Product", id);
   };
 
-  console.log("Edit Product", editProduct);
-
   return (
     <div>
       <Title>Products</Title>
+      <h2>Product Form:</h2>
+      <ProductForm editProduct={editProduct} />
       <ProductList
         products={products}
         setEditProduct={setEditProduct}
