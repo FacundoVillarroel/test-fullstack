@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-const serverURI = "http://localhost:8080";
+import ProductList from "../../components/productList/ProductList";
+import { Title } from "./home.styles";
 
+const serverURI = "http://localhost:8080";
 const Home = () => {
   const [products, setProducts] = useState([]);
 
@@ -21,9 +23,12 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  console.log("PRODUCTS:", products);
-
-  return <div>Home</div>;
+  return (
+    <div>
+      <Title>Products</Title>
+      <ProductList products={products} />
+    </div>
+  );
 };
 
 export default Home;
